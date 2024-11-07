@@ -1,15 +1,19 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
+
 
 const TaskInput = ({ task, onChangeText, onAddTask }) => {
   return (
     <View style={styles.inputContainer}>
-      <TextInput
-        style={styles.input}
-        placeholder="Nouvelle tâche..."
-        value={task}
-        onChangeText={onChangeText}
-      />
+<TextInput
+  style={styles.input}
+  placeholder="Nouvelle tâche..."
+  value={task}
+  onChangeText={onChangeText}
+  onSubmitEditing={onAddTask}
+  returnKeyType="done"
+/>
       <TouchableOpacity onPress={onAddTask} style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>

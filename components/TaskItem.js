@@ -1,50 +1,69 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
+import TaskModal from './TaskModal';
 
-const TaskItem = ({ task, onDelete }) => {
+const TaskItem = ({ task, onDelete, onUpdate }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <View style={styles.taskContainer}>
-      <Text style={styles.taskText}>{task.value}</Text>
-      <TouchableOpacity
-        onPress={() => onDelete(task.id)}
-        style={styles.deleteButton}
+    <>
+      <Pressable 
+        onPress={() => setModalVisible(true)}
+        android_ripple={{ color: 'rgba(0, 0, 0, 0.1)' }}
+        style={({ pressed }) => [
+          styles.taskContainer,
+          { opacity: pressed ? 0.7 : 1 }
+        ]}
       >
-        <Text style={styles.deleteButtonText}>X</Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={styles.taskText}>{task.value}</Text>
+        <TouchableOpacity
+          onPress={() => onDelete(task.id)}
+          style={styles.deleteButton}
+        >
+          <Text style={styles.deleteButtonText}>X</Text>
+        </TouchableOpacity>
+      </Pressable>
+
+      <TaskModal 
+  visible={modalVisible}
+  onClose={() => setModalVisible(false)}
+  task={task}
+  onUpdate={(newValue) => {
+    onUpdate(task.id, newValue);
+    setModalVisible(false);
+  }}
+/>
+    </>
   );
 };
+
+export default TaskItem;
 
 const styles = StyleSheet.create({
   taskContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#fff',
     padding: 15,
     borderRadius: 6,
     marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   taskText: {
     fontSize: 16,
     flex: 1,
   },
   deleteButton: {
-    backgroundColor: '#FF3B30',
-    padding: 8,
-    borderRadius: 6,
-    width: 40,
-    alignItems: 'center',
+    marginLeft: 10,
   },
   deleteButtonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#FF3B30',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
-
-export default TaskItem;
